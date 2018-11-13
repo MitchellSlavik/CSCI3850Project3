@@ -21,7 +21,13 @@ public class PageRank {
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
-		int NUM_ITERATIONS = 10;
+	    if (args.length != 3) {
+	        System.out.println("Incorrect number of arguments. Please provide args (GML path, n - number of PR iterations, d - dampening factor (0<d<1))");
+	        return;
+        }
+
+		int NUM_ITERATIONS = Integer.parseInt(args[1]);
+        double SCALE_FACTOR = Double.parseDouble(args[2]);
 
 		Graph g = new DefaultGraph("graph");
 
@@ -29,19 +35,22 @@ public class PageRank {
 		fs.addSink(g);
 
 		try {
-			fs.readAll(new FileInputStream("data/as-22july06.gml"));
+			fs.readAll(new FileInputStream(args[0]));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		    System.out.println("GML path is invalid. Please correct your path");
+		    e.printStackTrace();
 		} catch (IOException e) {
 			try {
-				BufferedReader br = new BufferedReader(new FileReader(new File("data/as-22july06.gml")));
+				BufferedReader br = new BufferedReader(new FileReader(new File(args[0])));
 				// take out starting line in case it has "creator"
 				br.readLine();
 				fs.readAll(br);
 				br.close();
 			} catch (FileNotFoundException e1) {
+                System.out.println("GML path is invalid. Please correct your path");
 				e1.printStackTrace();
 			} catch (IOException e1) {
+                System.out.println("Incompatible GML file, we tried parsing first author line out and running like normal...");
 				e1.printStackTrace();
 			}
 		}
@@ -64,7 +73,7 @@ public class PageRank {
 					sum += source.getNumber("rank") / source.getOutDegree();
 				}
 
-				n.setAttribute("newRank", sum);
+				n.setAttribute("newRank", (SCALE_FACTOR * sum) + ((1-SCALE_FACTOR) / (double) nodes.size()));
 			}
 
 			for (Node n : nodes) {
