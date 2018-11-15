@@ -22,8 +22,7 @@ public class PageRank {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		if (args.length != 3) {
-			System.out.println(
-					"Incorrect number of arguments. Please provide args (GML path, n - number of PR iterations, d - dampening factor (0<d<1))");
+			System.out.println("Incorrect number of arguments. Please provide args (GML path, n - number of PR iterations, d - dampening factor (0<d<1))");
 			return;
 		}
 
@@ -60,8 +59,7 @@ public class PageRank {
 				System.out.println("GML path is invalid. Please correct your path");
 				e1.printStackTrace();
 			} catch (IOException e1) {
-				System.out.println(
-						"Incompatible GML file, we tried parsing first author line out and running like normal...");
+				System.out.println("Incompatible GML file, we tried parsing first author line out and running like normal...");
 				e1.printStackTrace();
 			}
 		}
