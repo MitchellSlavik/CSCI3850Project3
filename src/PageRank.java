@@ -21,13 +21,23 @@ public class PageRank {
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
-	    if (args.length != 3) {
-	        System.out.println("Incorrect number of arguments. Please provide args (GML path, n - number of PR iterations, d - dampening factor (0<d<1))");
-	        return;
-        }
+		if (args.length != 3) {
+			System.out.println(
+					"Incorrect number of arguments. Please provide args (GML path, n - number of PR iterations, d - dampening factor (0<d<1))");
+			return;
+		}
 
 		int NUM_ITERATIONS = Integer.parseInt(args[1]);
-        double SCALE_FACTOR = Double.parseDouble(args[2]);
+		double SCALE_FACTOR = Double.parseDouble(args[2]);
+
+		if (NUM_ITERATIONS <= 0) {
+			System.out.println("Number of iterations cannot be less than or equal to 0");
+			return;
+		}
+		if (SCALE_FACTOR <= 0 || SCALE_FACTOR >= 1) {
+			System.out.println("Scale down factor must be between 0 and 1 non-inclusive");
+			return;
+		}
 
 		Graph g = new DefaultGraph("graph");
 
@@ -37,8 +47,8 @@ public class PageRank {
 		try {
 			fs.readAll(new FileInputStream(args[0]));
 		} catch (FileNotFoundException e) {
-		    System.out.println("GML path is invalid. Please correct your path");
-		    e.printStackTrace();
+			System.out.println("GML path is invalid. Please correct your path");
+			e.printStackTrace();
 		} catch (IOException e) {
 			try {
 				BufferedReader br = new BufferedReader(new FileReader(new File(args[0])));
@@ -47,10 +57,11 @@ public class PageRank {
 				fs.readAll(br);
 				br.close();
 			} catch (FileNotFoundException e1) {
-                System.out.println("GML path is invalid. Please correct your path");
+				System.out.println("GML path is invalid. Please correct your path");
 				e1.printStackTrace();
 			} catch (IOException e1) {
-                System.out.println("Incompatible GML file, we tried parsing first author line out and running like normal...");
+				System.out.println(
+						"Incompatible GML file, we tried parsing first author line out and running like normal...");
 				e1.printStackTrace();
 			}
 		}
@@ -73,7 +84,7 @@ public class PageRank {
 					sum += source.getNumber("rank") / source.getOutDegree();
 				}
 
-				n.setAttribute("newRank", (SCALE_FACTOR * sum) + ((1-SCALE_FACTOR) / (double) nodes.size()));
+				n.setAttribute("newRank", (SCALE_FACTOR * sum) + ((1 - SCALE_FACTOR) / (double) nodes.size()));
 			}
 
 			for (Node n : nodes) {
